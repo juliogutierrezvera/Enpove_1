@@ -1,0 +1,63 @@
+---
+title: "Unificar Enpove"
+author: "Julio Gutiérrez"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Juntando data
+
+```{r}
+
+#install.packages("foreign")
+library(foreign)
+getwd()
+
+setwd("~/Library/CloudStorage/OneDrive-Personal/Enpove 1/Enpove_1")
+
+modulo1 <- read.spss("ENPOVE_Capitulo 100 - Carctaerísticas de la Vivienda y del Hogar.sav.sav", to.data.frame = T)
+
+modulo2 <- read.spss("ENPOVE_Capitulo 200 - Carctaerísticas de los Residentes del Hogar.sav.sav", to.data.frame = T)
+modulo2$COD_UNICO=paste0(modulo2$UBIGEO, modulo2$ZONA, modulo2$VIVIENDA, modulo2$HOGAR, modulo2$CODPERSO)
+
+modulo3 <- read.spss("ENPOVE_Capitulo 300 - Situación Migratoria de la Persona.sav.sav", to.data.frame = T)
+modulo3$COD_UNICO=paste0(modulo3$UBIGEO, modulo3$ZONA, modulo3$VIVIENDA, modulo3$HOGAR, modulo3$CODPERSO)
+#P304
+
+modulo4 <- read.spss("ENPOVE_Capitulo 400 - Salud.sav.sav", to.data.frame = T)
+modulo4$COD_UNICO=paste0(modulo4$UBIGEO, modulo4$ZONA, modulo4$VIVIENDA, modulo4$HOGAR, modulo4$CODPERSO)
+#P401
+
+modulo5 <- read.spss("ENPOVE_Capitulo 500 - Educación(cambio).sav.sav", to.data.frame = T)
+modulo5$COD_UNICO=paste0(modulo5$UBIGEO, modulo5$ZONA, modulo5$VIVIENDA, modulo5$HOGAR, modulo5$CODPERSO)
+#P510 y Nivel de educación
+
+modulo6 <- read.spss("ENPOVE_Capitulo 600 - Empleo(cambio).sav.sav", to.data.frame = T)
+modulo6$COD_UNICO=paste0(modulo6$UBIGEO, modulo6$ZONA, modulo6$VIVIENDA, modulo6$HOGAR, modulo6$CODPERSO)
+
+modulo7 <- read.spss("ENPOVE_Capitulo 700 - Discriminación.sav.sav", to.data.frame = T)
+modulo7$COD_UNICO=paste0(modulo7$UBIGEO, modulo7$ZONA, modulo7$VIVIENDA, modulo7$HOGAR, modulo7$CODPERSO)
+
+#data final 
+#install.packages("plyr")
+library(plyr)
+
+#merge data
+df <- join_all(list(modulo2,modulo3,modulo4,modulo5, modulo6, modulo7),by = 'COD_UNICO', type = 'full')
+
+```
+
+```{r}
+#Export XLSX
+
+library(readxl)
+library(openxlsx)
+#setwd("~/Library/CloudStorage/OneDrive-Personal/Enpove 1/Enpove_1") ##ubicación del archivo
+#write.xlsx(df, file = "~/Library/CloudStorage/OneDrive-Personal/Enpove 1/Enpove_1/Enpove_1.xlsx")#export xlsx
+```
+
+
+
